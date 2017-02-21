@@ -30,11 +30,16 @@ namespace CadnunsDev.CurrencyNotifier
 
         private void Form1_Resize(object sender, EventArgs e)
         {
+            PutAppOnSystemTray();
+        }
+
+        private void PutAppOnSystemTray()
+        {
             if (WindowState == FormWindowState.Minimized)
             {
                 this.ShowIcon = false;
                 iconeSistema.Visible = true;
-                iconeSistema.ShowBalloonTip(1000, Text,"você será notificado sobre o valor do dolar",ToolTipIcon.Info);
+                iconeSistema.ShowBalloonTip(1000, Text, "você será notificado sobre o valor do dolar", ToolTipIcon.Info);
                 this.Hide();
             }
         }

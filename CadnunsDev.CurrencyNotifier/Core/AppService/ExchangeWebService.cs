@@ -70,23 +70,31 @@ namespace CadnunsDev.CurrencyNotifier.Core.AppService
             
         }
 
-        private async Task<decimal> GetCryptoCurrencyValue(string fromCurrency, string toCurrency)
+        private async Task<decimal> GetCryptoCurrencyValue(string fromCurrency, string toCurrency, bool tryAgain = true, bool invertvaluesOnURL = false)
         {
 
-            var codesCrytoMoedas = new[] { "XMR", "BTC" };
+            //var codesCrytoMoedas = new[] { "XMR", "BTC" };
+
+
 
             //var fromIsCripto = codesCrytoMoedas.Contains(fromCurrency);
 
+            //var fromUrl = fromCurrency;
+            //var toUrl = toCurrency;
+
             //if (fromIsCripto)
             //{
-            //    var from = fromCurrency;
-            //    fromCurrency = toCurrency;
-            //    toCurrency = from;
+            //    fromUrl = toCurrency;
+            //    toCurrency = to
             //}
 
             var web = new HttpClient();
 
             var url = Constantes.GetCriptoCrExchage.ToFormat(fromCurrency, toCurrency);
+            if (invertvaluesOnURL)
+            {
+                url = Constantes.GetCriptoCrExchage.ToFormat(toCurrency, fromCurrency);
+            }
 
             XmlReader reader = XmlReader.Create(url);
             SyndicationFeed feed = SyndicationFeed.Load(reader);
@@ -114,6 +122,10 @@ namespace CadnunsDev.CurrencyNotifier.Core.AppService
                 var valorTo = dados[3].Replace('.', ',').ToDecimal();
                 var value = valorTo / valorFrom;
                 return value;
+            }
+            else if (tryAgain)
+            {
+                return await GetCryptoCurrencyValue(fromCurrency, toCurrency, false, true);
             }
             else
             {

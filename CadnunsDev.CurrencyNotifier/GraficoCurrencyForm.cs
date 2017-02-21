@@ -33,7 +33,8 @@ namespace CadnunsDev.CurrencyNotifier
         private void LoadDataChart()
         {
             chart1.DataSource = _logs;
-            //var linha = chart1.Series.FirstOrDefault();
+            var linha = chart1.Series.FirstOrDefault();
+            linha.Name = $"{_currency.Code} >> {_currency.ExchangeBaseCurrencyCode}";
             chart1.DataBind();
         }
 
